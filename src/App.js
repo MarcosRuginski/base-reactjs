@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import api from './services/api';
 
 import './App.css';
-import backgroundImage from './assets/background.jpg';
 
 import Header from './components/Header';
 
 function App() {
-  const [projects, setProjects] = useState(['Desenvolvimento de app', 'Front-end web']);
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    api.get('projects').then(response => {
+      setProjects(response.data)
+    });
+  }, []);
 
   function handleAddPropject() {
     // projects.push(`Novo projeto ${Date.now()}`);
@@ -19,9 +25,8 @@ function App() {
   return (
     <>
       <Header title="Projects" />
-      <img width={300} src={backgroundImage} />
       <ul>
-        {projects.map((project, idx) => <li key={idx}>{project}</li>)}
+        {projects.map(project => <li key={project.id}>{project.title}</li>)}
       </ul>
 
       <button type="button" onClick={handleAddPropject}>Adicionar projeto</button>
